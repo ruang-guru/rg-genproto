@@ -21,14 +21,353 @@ var _ = math.Inf
 // proto package needs to be updated.
 const _ = proto.ProtoPackageIsVersion3 // please upgrade the proto package
 
+// HttpStatus
+// source: https://en.wikipedia.org/wiki/List_of_HTTP_status_codes
+type HttpStatus int32
+
+const (
+	HttpStatus_UNKNOWN HttpStatus = 0
+	// 100 Continue
+	// The server has received the request headers and the client should proceed to send the request body (in the case of a request for which a body needs to be sent; for example, a POST request). Sending a large request body to a server after a request has been rejected for inappropriate headers would be inefficient. To have a server check the request's headers, a client must send Expect: 100-continue as a header in its initial request and receive a 100 Continue status code in response before sending the body. If the client receives an error code such as 403 (Forbidden) or 405 (Method Not Allowed) then it shouldn't send the request's body. The response 417 Expectation Failed indicates that the request should be repeated without the Expect header as it indicates that the server doesn't support expectations (this is the case, for example, of HTTP/1.0 servers).
+	HttpStatus_CONTINUE HttpStatus = 100
+	// 101 Switching Protocols
+	// The requester has asked the server to switch protocols and the server has agreed to do so.
+	HttpStatus_SWITCHING_PROTOCOLS HttpStatus = 101
+	// 102 Processing (WebDAV; RFC 2518)
+	// A WebDAV request may contain many sub-requests involving file operations, requiring a long time to complete the request. This code indicates that the server has received and is processing the request, but no response is available yet. This prevents the client from timing out and assuming the request was lost.
+	HttpStatus_PROCESSING HttpStatus = 102
+	// 103 Early Hints (RFC 8297)
+	// Used to return some response headers before final HTTP message.
+	HttpStatus_EARLY_HINTS HttpStatus = 103
+	// 200 OK
+	// Standard response for successful HTTP requests. The actual response will depend on the request method used. In a GET request, the response will contain an entity corresponding to the requested resource. In a POST request, the response will contain an entity describing or containing the result of the action.
+	HttpStatus_OK HttpStatus = 200
+	// 201 Created
+	// The request has been fulfilled, resulting in the creation of a new resource.
+	HttpStatus_CREATED HttpStatus = 201
+	// 202 Accepted
+	// The request has been accepted for processing, but the processing has not been completed. The request might or might not be eventually acted upon, and may be disallowed when processing occurs.
+	HttpStatus_ACCEPTED HttpStatus = 202
+	// 203 Non-Authoritative Information (since HTTP/1.1)
+	// The server is a transforming proxy (e.g. a Web accelerator) that received a 200 OK from its origin, but is returning a modified version of the origin's response.
+	HttpStatus_NON_AUTHORITATIVE_INFORMATION HttpStatus = 203
+	// 204 No Content
+	// The server successfully processed the request and is not returning any content.
+	HttpStatus_NO_CONTENT HttpStatus = 204
+	// 205 Reset Content
+	// The server successfully processed the request, but is not returning any content. Unlike a 204 response, this response requires that the requester reset the document view.
+	HttpStatus_RESET_CONTENT HttpStatus = 205
+	// 206 Partial Content (RFC 7233)
+	// The server is delivering only part of the resource (byte serving) due to a range header sent by the client. The range header is used by HTTP clients to enable resuming of interrupted downloads, or split a download into multiple simultaneous streams.
+	HttpStatus_PARTIAL_CONTENT HttpStatus = 206
+	// 207 Multi-Status (WebDAV; RFC 4918)
+	// The message body that follows is by default an XML message and can contain a number of separate response codes, depending on how many sub-requests were made.
+	HttpStatus_MULTI_STATUS HttpStatus = 207
+	// 208 Already Reported (WebDAV; RFC 5842)
+	// The members of a DAV binding have already been enumerated in a preceding part of the (multistatus) response, and are not being included again.
+	HttpStatus_ALREADY_REPORTED HttpStatus = 208
+	// 226 IM Used (RFC 3229)
+	// The server has fulfilled a request for the resource, and the response is a representation of the result of one or more instance-manipulations applied to the current instance.
+	HttpStatus_IM_USED HttpStatus = 226
+	// 300 Multiple Choices
+	// Indicates multiple options for the resource from which the client may choose (via agent-driven content negotiation). For example, this code could be used to present multiple video format options, to list files with different filename extensions, or to suggest word-sense disambiguation.
+	HttpStatus_MULTIPLE_CHOICES HttpStatus = 300
+	// 301 Moved Permanently
+	// This and all future requests should be directed to the given URI.
+	HttpStatus_MOVED_PERMANENTLY HttpStatus = 301
+	// 302 Found (Previously "Moved temporarily")
+	// Tells the client to look at (browse to) another URL. 302 has been superseded by 303 and 307. This is an example of industry practice contradicting the standard. The HTTP/1.0 specification (RFC 1945) required the client to perform a temporary redirect (the original describing phrase was "Moved Temporarily"), but popular browsers implemented 302 with the functionality of a 303 See Other. Therefore, HTTP/1.1 added status codes 303 and 307 to distinguish between the two behaviours. However, some Web applications and frameworks use the 302 status code as if it were the 303.
+	HttpStatus_FOUND HttpStatus = 302
+	// 303 See Other (since HTTP/1.1)
+	// The response to the request can be found under another URI using the GET method. When received in response to a POST (or PUT/DELETE), the client should presume that the server has received the data and should issue a new GET request to the given URI.
+	HttpStatus_SEE_OTHER HttpStatus = 303
+	// 304 Not Modified (RFC 7232)
+	// Indicates that the resource has not been modified since the version specified by the request headers If-Modified-Since or If-None-Match. In such case, there is no need to retransmit the resource since the client still has a previously-downloaded copy.
+	HttpStatus_NOT_MODIFIED HttpStatus = 304
+	// 305 Use Proxy (since HTTP/1.1)
+	// The requested resource is available only through a proxy, the address for which is provided in the response. For security reasons, many HTTP clients (such as Mozilla Firefox and Internet Explorer) do not obey this status code.
+	HttpStatus_USE_PROXY HttpStatus = 305
+	// 306 Switch Proxy
+	// No longer used. Originally meant "Subsequent requests should use the specified proxy."
+	HttpStatus_SWITCH_PROXY HttpStatus = 306
+	// 307 Temporary Redirect (since HTTP/1.1)
+	// In this case, the request should be repeated with another URI; however, future requests should still use the original URI. In contrast to how 302 was historically implemented, the request method is not allowed to be changed when reissuing the original request. For example, a POST request should be repeated using another POST request.
+	HttpStatus_TEMPORARY_REDIRECT HttpStatus = 307
+	// 308 Permanent Redirect (RFC 7538)
+	// The request and all future requests should be repeated using another URI. 307 and 308 parallel the behaviors of 302 and 301, but do not allow the HTTP method to change. So, for example, submitting a form to a permanently redirected resource may continue smoothly.
+	HttpStatus_PERMANENT_REDIRECT HttpStatus = 308
+	// 400 Bad Request
+	// The server cannot or will not process the request due to an apparent client error (e.g., malformed request syntax, size too large, invalid request message framing, or deceptive request routing).
+	HttpStatus_BAD_REQUEST HttpStatus = 400
+	// 401 Unauthorized (RFC 7235)
+	// Similar to 403 Forbidden, but specifically for use when authentication is required and has failed or has not yet been provided. The response must include a WWW-Authenticate header field containing a challenge applicable to the requested resource. See Basic access authentication and Digest access authentication. 401 semantically means "unauthorised", the user does not have valid authentication credentials for the target resource.
+	HttpStatus_UNAUTHORIZED HttpStatus = 401
+	// 402 Payment Required
+	// Reserved for future use. The original intention was that this code might be used as part of some form of digital cash or micropayment scheme, as proposed, for example, by GNU Taler, but that has not yet happened, and this code is not widely used. Google Developers API uses this status if a particular developer has exceeded the daily limit on requests. Sipgate uses this code if an account does not have sufficient funds to start a call. Shopify uses this code when the store has not paid their fees and is temporarily disabled. Stripe uses this code for failed payments where parameters were correct, for example blocked fraudulent payments.
+	HttpStatus_PAYMENT_REQUIRED HttpStatus = 402
+	// 403 Forbidden
+	// The request contained valid data and was understood by the server, but the server is refusing action. This may be due to the user not having the necessary permissions for a resource or needing an account of some sort, or attempting a prohibited action (e.g. creating a duplicate record where only one is allowed). This code is also typically used if the request provided authentication via the WWW-Authenticate header field, but the server did not accept that authentication. The request should not be repeated.
+	HttpStatus_FORBIDDEN HttpStatus = 403
+	// 404 Not Found
+	// The requested resource could not be found but may be available in the future. Subsequent requests by the client are permissible.
+	HttpStatus_NOT_FOUND HttpStatus = 404
+	// 405 Method Not Allowed
+	// A request method is not supported for the requested resource; for example, a GET request on a form that requires data to be presented via POST, or a PUT request on a read-only resource.
+	HttpStatus_METHOD_NOT_ALLOWED HttpStatus = 405
+	// 406 Not Acceptable
+	// The requested resource is capable of generating only content not acceptable according to the Accept headers sent in the request. See Content negotiation.
+	HttpStatus_NOT_ACCEPTABLE HttpStatus = 406
+	// 407 Proxy Authentication Required (RFC 7235)
+	// The client must first authenticate itself with the proxy.
+	HttpStatus_PROXY_AUTHENTICATION_REQUIRED HttpStatus = 407
+	// 408 Request Timeout
+	// The server timed out waiting for the request. According to HTTP specifications: "The client did not produce a request within the time that the server was prepared to wait. The client MAY repeat the request without modifications at any later time."
+	HttpStatus_REQUEST_TIMEOUT HttpStatus = 408
+	// 409 Conflict
+	// Indicates that the request could not be processed because of conflict in the current state of the resource, such as an edit conflict between multiple simultaneous updates.
+	HttpStatus_CONFLICT HttpStatus = 409
+	// 410 Gone
+	// Indicates that the resource requested is no longer available and will not be available again. This should be used when a resource has been intentionally removed and the resource should be purged. Upon receiving a 410 status code, the client should not request the resource in the future. Clients such as search engines should remove the resource from their indices. Most use cases do not require clients and search engines to purge the resource, and a "404 Not Found" may be used instead.
+	HttpStatus_GONE HttpStatus = 410
+	// 411 Length Required
+	// The request did not specify the length of its content, which is required by the requested resource.
+	HttpStatus_LENGTH_REQUIRED HttpStatus = 411
+	// 412 Precondition Failed (RFC 7232)
+	// The server does not meet one of the preconditions that the requester put on the request header fields.
+	HttpStatus_PRECONDITION_FAILED HttpStatus = 412
+	// 413 Payload Too Large (RFC 7231)
+	// The request is larger than the server is willing or able to process. Previously called "Request Entity Too Large".
+	HttpStatus_PAYLOAD_TOO_LARGE HttpStatus = 413
+	// 414 URI Too Long (RFC 7231)
+	// The URI provided was too long for the server to process. Often the result of too much data being encoded as a query-string of a GET request, in which case it should be converted to a POST request. Called "Request-URI Too Long" previously.
+	HttpStatus_URI_TOO_LONG HttpStatus = 414
+	// 415 Unsupported Media Type (RFC 7231)
+	// The request entity has a media type which the server or resource does not support. For example, the client uploads an image as image/svg+xml, but the server requires that images use a different format.
+	HttpStatus_UNSUPPORTED_MEDIA_TYPE HttpStatus = 415
+	// 416 Range Not Satisfiable (RFC 7233)
+	// The client has asked for a portion of the file (byte serving), but the server cannot supply that portion. For example, if the client asked for a part of the file that lies beyond the end of the file. Called "Requested Range Not Satisfiable" previously.
+	HttpStatus_RANGE_NOT_SATISFIABLE HttpStatus = 416
+	// 417 Expectation Failed
+	// The server cannot meet the requirements of the Expect request-header field.
+	HttpStatus_EXPECTATION_FAILED HttpStatus = 417
+	// 418 I'm a teapot (RFC 2324, RFC 7168)
+	// This code was defined in 1998 as one of the traditional IETF April Fools' jokes, in RFC 2324, Hyper Text Coffee Pot Control Protocol, and is not expected to be implemented by actual HTTP servers. The RFC specifies this code should be returned by teapots requested to brew coffee. This HTTP status is used as an Easter egg in some websites, including Google.com.
+	HttpStatus_I_M_A_TEAPOT HttpStatus = 418
+	// 421 Misdirected Request (RFC 7540)
+	// The request was directed at a server that is not able to produce a response (for example because of connection reuse).
+	HttpStatus_MISDIRECTED_REQUEST HttpStatus = 421
+	// 422 Unprocessable Entity (WebDAV; RFC 4918)
+	// The request was well-formed but was unable to be followed due to semantic errors.
+	HttpStatus_UNPROCESSABLE_ENTITY HttpStatus = 422
+	// 423 Locked (WebDAV; RFC 4918)
+	// The resource that is being accessed is locked.
+	HttpStatus_LOCKED HttpStatus = 423
+	// 424 Failed Dependency (WebDAV; RFC 4918)
+	// The request failed because it depended on another request and that request failed (e.g., a PROPPATCH).
+	HttpStatus_FAILED_DEPENDENCY HttpStatus = 424
+	// 425 Too Early (RFC 8470)
+	// Indicates that the server is unwilling to risk processing a request that might be replayed.
+	HttpStatus_TOO_EARLY HttpStatus = 425
+	// 426 Upgrade Required
+	// The client should switch to a different protocol such as TLS/1.0, given in the Upgrade header field.
+	HttpStatus_UPGRADE_REQUIRED HttpStatus = 426
+	// 428 Precondition Required (RFC 6585)
+	// The origin server requires the request to be conditional. Intended to prevent the 'lost update' problem, where a client GETs a resource's state, modifies it, and PUTs it back to the server, when meanwhile a third party has modified the state on the server, leading to a conflict.
+	HttpStatus_PRECONDITION_REQUIRED HttpStatus = 428
+	// 429 Too Many Requests (RFC 6585)
+	// The user has sent too many requests in a given amount of time. Intended for use with rate-limiting schemes.
+	HttpStatus_TOO_MANY_REQUESTS HttpStatus = 429
+	// 431 Request Header Fields Too Large (RFC 6585)
+	// The server is unwilling to process the request because either an individual header field, or all the header fields collectively, are too large.
+	HttpStatus_REQUEST_HEADER_FIELDS_TOO_LARGE HttpStatus = 431
+	// 451 Unavailable For Legal Reasons (RFC 7725)
+	// A server operator has received a legal demand to deny access to a resource or to a set of resources that includes the requested resource. The code 451 was chosen as a reference to the novel Fahrenheit 451 (see the Acknowledgements in the RFC).
+	HttpStatus_UNAVAILABLE_FOR_LEGAL_REASONS HttpStatus = 451
+	// 500 Internal Server Error
+	// A generic error message, given when an unexpected condition was encountered and no more specific message is suitable.
+	HttpStatus_INTERNAL_SERVER_ERROR HttpStatus = 500
+	// 501 Not Implemented
+	// The server either does not recognize the request method, or it lacks the ability to fulfil the request. Usually this implies future availability (e.g., a new feature of a web-service API).
+	HttpStatus_NOT_IMPLEMENTED HttpStatus = 501
+	// 502 Bad Gateway
+	// The server was acting as a gateway or proxy and received an invalid response from the upstream server.
+	HttpStatus_BAD_GATEWAY HttpStatus = 502
+	// 503 Service Unavailable
+	// The server cannot handle the request (because it is overloaded or down for maintenance). Generally, this is a temporary state.
+	HttpStatus_SERVICE_UNAVAILABLE HttpStatus = 503
+	// 504 Gateway Timeout
+	// The server was acting as a gateway or proxy and did not receive a timely response from the upstream server.
+	HttpStatus_GATEWAY_TIMEOUT HttpStatus = 504
+	// 505 HTTP Version Not Supported
+	// The server does not support the HTTP protocol version used in the request.
+	HttpStatus_HTTP_VERSION_NOT_SUPPORTED HttpStatus = 505
+	// 506 Variant Also Negotiates (RFC 2295)
+	// Transparent content negotiation for the request results in a circular reference.
+	HttpStatus_VARIANT_ALSO_NEGOTIATES HttpStatus = 506
+	// 507 Insufficient Storage (WebDAV; RFC 4918)
+	// The server is unable to store the representation needed to complete the request.
+	HttpStatus_INSUFFICIENT_STORAGE HttpStatus = 507
+	// 508 Loop Detected (WebDAV; RFC 5842)
+	// The server detected an infinite loop while processing the request (sent instead of 208 Already Reported).
+	HttpStatus_LOOP_DETECTED HttpStatus = 508
+	// 510 Not Extended (RFC 2774)
+	// Further extensions to the request are required for the server to fulfil it.
+	HttpStatus_NOT_EXTENDED HttpStatus = 510
+	// 511 Network Authentication Required (RFC 6585)
+	// The client needs to authenticate to gain network access. Intended for use by intercepting proxies used to control access to the network (e.g., "captive portals" used to require agreement to Terms of Service before granting full Internet access via a Wi-Fi hotspot).
+	HttpStatus_NETWORK_AUTHENTICATION_REQUIRED HttpStatus = 511
+)
+
+var HttpStatus_name = map[int32]string{
+	0:   "UNKNOWN",
+	100: "CONTINUE",
+	101: "SWITCHING_PROTOCOLS",
+	102: "PROCESSING",
+	103: "EARLY_HINTS",
+	200: "OK",
+	201: "CREATED",
+	202: "ACCEPTED",
+	203: "NON_AUTHORITATIVE_INFORMATION",
+	204: "NO_CONTENT",
+	205: "RESET_CONTENT",
+	206: "PARTIAL_CONTENT",
+	207: "MULTI_STATUS",
+	208: "ALREADY_REPORTED",
+	226: "IM_USED",
+	300: "MULTIPLE_CHOICES",
+	301: "MOVED_PERMANENTLY",
+	302: "FOUND",
+	303: "SEE_OTHER",
+	304: "NOT_MODIFIED",
+	305: "USE_PROXY",
+	306: "SWITCH_PROXY",
+	307: "TEMPORARY_REDIRECT",
+	308: "PERMANENT_REDIRECT",
+	400: "BAD_REQUEST",
+	401: "UNAUTHORIZED",
+	402: "PAYMENT_REQUIRED",
+	403: "FORBIDDEN",
+	404: "NOT_FOUND",
+	405: "METHOD_NOT_ALLOWED",
+	406: "NOT_ACCEPTABLE",
+	407: "PROXY_AUTHENTICATION_REQUIRED",
+	408: "REQUEST_TIMEOUT",
+	409: "CONFLICT",
+	410: "GONE",
+	411: "LENGTH_REQUIRED",
+	412: "PRECONDITION_FAILED",
+	413: "PAYLOAD_TOO_LARGE",
+	414: "URI_TOO_LONG",
+	415: "UNSUPPORTED_MEDIA_TYPE",
+	416: "RANGE_NOT_SATISFIABLE",
+	417: "EXPECTATION_FAILED",
+	418: "I_M_A_TEAPOT",
+	421: "MISDIRECTED_REQUEST",
+	422: "UNPROCESSABLE_ENTITY",
+	423: "LOCKED",
+	424: "FAILED_DEPENDENCY",
+	425: "TOO_EARLY",
+	426: "UPGRADE_REQUIRED",
+	428: "PRECONDITION_REQUIRED",
+	429: "TOO_MANY_REQUESTS",
+	431: "REQUEST_HEADER_FIELDS_TOO_LARGE",
+	451: "UNAVAILABLE_FOR_LEGAL_REASONS",
+	500: "INTERNAL_SERVER_ERROR",
+	501: "NOT_IMPLEMENTED",
+	502: "BAD_GATEWAY",
+	503: "SERVICE_UNAVAILABLE",
+	504: "GATEWAY_TIMEOUT",
+	505: "HTTP_VERSION_NOT_SUPPORTED",
+	506: "VARIANT_ALSO_NEGOTIATES",
+	507: "INSUFFICIENT_STORAGE",
+	508: "LOOP_DETECTED",
+	510: "NOT_EXTENDED",
+	511: "NETWORK_AUTHENTICATION_REQUIRED",
+}
+
+var HttpStatus_value = map[string]int32{
+	"UNKNOWN":                         0,
+	"CONTINUE":                        100,
+	"SWITCHING_PROTOCOLS":             101,
+	"PROCESSING":                      102,
+	"EARLY_HINTS":                     103,
+	"OK":                              200,
+	"CREATED":                         201,
+	"ACCEPTED":                        202,
+	"NON_AUTHORITATIVE_INFORMATION":   203,
+	"NO_CONTENT":                      204,
+	"RESET_CONTENT":                   205,
+	"PARTIAL_CONTENT":                 206,
+	"MULTI_STATUS":                    207,
+	"ALREADY_REPORTED":                208,
+	"IM_USED":                         226,
+	"MULTIPLE_CHOICES":                300,
+	"MOVED_PERMANENTLY":               301,
+	"FOUND":                           302,
+	"SEE_OTHER":                       303,
+	"NOT_MODIFIED":                    304,
+	"USE_PROXY":                       305,
+	"SWITCH_PROXY":                    306,
+	"TEMPORARY_REDIRECT":              307,
+	"PERMANENT_REDIRECT":              308,
+	"BAD_REQUEST":                     400,
+	"UNAUTHORIZED":                    401,
+	"PAYMENT_REQUIRED":                402,
+	"FORBIDDEN":                       403,
+	"NOT_FOUND":                       404,
+	"METHOD_NOT_ALLOWED":              405,
+	"NOT_ACCEPTABLE":                  406,
+	"PROXY_AUTHENTICATION_REQUIRED":   407,
+	"REQUEST_TIMEOUT":                 408,
+	"CONFLICT":                        409,
+	"GONE":                            410,
+	"LENGTH_REQUIRED":                 411,
+	"PRECONDITION_FAILED":             412,
+	"PAYLOAD_TOO_LARGE":               413,
+	"URI_TOO_LONG":                    414,
+	"UNSUPPORTED_MEDIA_TYPE":          415,
+	"RANGE_NOT_SATISFIABLE":           416,
+	"EXPECTATION_FAILED":              417,
+	"I_M_A_TEAPOT":                    418,
+	"MISDIRECTED_REQUEST":             421,
+	"UNPROCESSABLE_ENTITY":            422,
+	"LOCKED":                          423,
+	"FAILED_DEPENDENCY":               424,
+	"TOO_EARLY":                       425,
+	"UPGRADE_REQUIRED":                426,
+	"PRECONDITION_REQUIRED":           428,
+	"TOO_MANY_REQUESTS":               429,
+	"REQUEST_HEADER_FIELDS_TOO_LARGE": 431,
+	"UNAVAILABLE_FOR_LEGAL_REASONS":   451,
+	"INTERNAL_SERVER_ERROR":           500,
+	"NOT_IMPLEMENTED":                 501,
+	"BAD_GATEWAY":                     502,
+	"SERVICE_UNAVAILABLE":             503,
+	"GATEWAY_TIMEOUT":                 504,
+	"HTTP_VERSION_NOT_SUPPORTED":      505,
+	"VARIANT_ALSO_NEGOTIATES":         506,
+	"INSUFFICIENT_STORAGE":            507,
+	"LOOP_DETECTED":                   508,
+	"NOT_EXTENDED":                    510,
+	"NETWORK_AUTHENTICATION_REQUIRED": 511,
+}
+
+func (x HttpStatus) String() string {
+	return proto.EnumName(HttpStatus_name, int32(x))
+}
+
+func (HttpStatus) EnumDescriptor() ([]byte, []int) {
+	return fileDescriptor_26ed9f0d038c558a, []int{0}
+}
+
 type Error struct {
-	Name                 string   `protobuf:"bytes,810001,opt,name=name,proto3" json:"name,omitempty"`
-	HttpStatus           int32    `protobuf:"varint,810002,opt,name=http_status,json=httpStatus,proto3" json:"http_status,omitempty"`
-	Code                 int32    `protobuf:"varint,810004,opt,name=code,proto3" json:"code,omitempty"`
-	Message              string   `protobuf:"bytes,810005,opt,name=message,proto3" json:"message,omitempty"`
-	XXX_NoUnkeyedLiteral struct{} `json:"-"`
-	XXX_unrecognized     []byte   `json:"-"`
-	XXX_sizecache        int32    `json:"-"`
+	Name                 string     `protobuf:"bytes,810001,opt,name=name,proto3" json:"name,omitempty"`
+	HttpStatus           HttpStatus `protobuf:"varint,810002,opt,name=http_status,json=httpStatus,proto3,enum=rg.HttpStatus" json:"http_status,omitempty"`
+	Code                 int32      `protobuf:"varint,810004,opt,name=code,proto3" json:"code,omitempty"`
+	Message              string     `protobuf:"bytes,810005,opt,name=message,proto3" json:"message,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}   `json:"-"`
+	XXX_unrecognized     []byte     `json:"-"`
+	XXX_sizecache        int32      `json:"-"`
 }
 
 func (m *Error) Reset()         { *m = Error{} }
@@ -63,11 +402,11 @@ func (m *Error) GetName() string {
 	return ""
 }
 
-func (m *Error) GetHttpStatus() int32 {
+func (m *Error) GetHttpStatus() HttpStatus {
 	if m != nil {
 		return m.HttpStatus
 	}
-	return 0
+	return HttpStatus_UNKNOWN
 }
 
 func (m *Error) GetCode() int32 {
@@ -159,6 +498,7 @@ var E_GatewayUrl = &proto.ExtensionDesc{
 }
 
 func init() {
+	proto.RegisterEnum("rg.HttpStatus", HttpStatus_name, HttpStatus_value)
 	proto.RegisterType((*Error)(nil), "rg.error")
 	proto.RegisterType((*Auth)(nil), "rg.Auth")
 	proto.RegisterExtension(E_Errors)
@@ -166,31 +506,85 @@ func init() {
 	proto.RegisterExtension(E_GatewayUrl)
 }
 
-func init() {
-	proto.RegisterFile("extension/rg.proto", fileDescriptor_26ed9f0d038c558a)
-}
+func init() { proto.RegisterFile("extension/rg.proto", fileDescriptor_26ed9f0d038c558a) }
 
 var fileDescriptor_26ed9f0d038c558a = []byte{
-	// 333 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x84, 0x91, 0xb1, 0x4e, 0xeb, 0x30,
-	0x14, 0x86, 0xd5, 0x7b, 0xdb, 0xde, 0xd6, 0xd9, 0xa2, 0x2b, 0x64, 0x75, 0x40, 0xa1, 0x53, 0x97,
-	0x3a, 0xb4, 0x6c, 0x41, 0x42, 0x2a, 0xcc, 0x08, 0x29, 0x88, 0x85, 0xa5, 0x72, 0x9a, 0x83, 0x13,
-	0x29, 0xb5, 0xa3, 0x63, 0x5b, 0xc0, 0x23, 0xc0, 0x80, 0x00, 0xc1, 0xbb, 0x74, 0x63, 0xe4, 0x35,
-	0x78, 0x0c, 0x46, 0x64, 0x27, 0x65, 0xed, 0x78, 0xbe, 0xff, 0xfc, 0xbf, 0xfe, 0x63, 0x93, 0x10,
-	0xee, 0x0c, 0x48, 0x5d, 0x2a, 0x19, 0xa3, 0x60, 0x35, 0x2a, 0xa3, 0xc2, 0x3f, 0x28, 0x46, 0x91,
-	0x50, 0x4a, 0x54, 0x10, 0x7b, 0x92, 0xd9, 0x9b, 0x38, 0x07, 0xbd, 0xc2, 0xb2, 0x36, 0x0a, 0x9b,
-	0xad, 0x31, 0x92, 0x1e, 0x20, 0x2a, 0x0c, 0xff, 0x93, 0xae, 0xe4, 0x6b, 0xa0, 0x2f, 0x9b, 0x59,
-	0xd4, 0x99, 0x0c, 0x53, 0x3f, 0x85, 0x07, 0x24, 0x28, 0x8c, 0xa9, 0x97, 0xda, 0x70, 0x63, 0x35,
-	0x7d, 0xf5, 0x62, 0x2f, 0x25, 0x0e, 0x5e, 0x7a, 0xe6, 0x8c, 0x2b, 0x95, 0x03, 0x7d, 0x6b, 0x35,
-	0x3f, 0x85, 0x23, 0xf2, 0x6f, 0x0d, 0x5a, 0x73, 0x01, 0xf4, 0xbd, 0x4d, 0xdc, 0x82, 0x71, 0x42,
-	0xba, 0x0b, 0x6b, 0x0a, 0xb7, 0x03, 0x92, 0x67, 0x15, 0xe4, 0xf4, 0xe1, 0x69, 0x1e, 0x75, 0x26,
-	0x83, 0x74, 0x0b, 0xc2, 0x3d, 0xd2, 0x43, 0x55, 0x81, 0xa6, 0x8f, 0x5e, 0x19, 0xa6, 0xcd, 0x98,
-	0x9c, 0x91, 0xbe, 0xef, 0xab, 0xc3, 0x7d, 0xd6, 0x1c, 0xc7, 0xb6, 0xc7, 0xb1, 0x73, 0x30, 0x85,
-	0xca, 0x2f, 0x6a, 0x53, 0x2a, 0xa9, 0xe9, 0xf3, 0x66, 0x16, 0xfd, 0x9d, 0x04, 0xf3, 0x21, 0x43,
-	0xc1, 0xbc, 0x27, 0x6d, 0xad, 0xc9, 0x09, 0xe9, 0x72, 0x57, 0x60, 0x57, 0xc4, 0xf7, 0x87, 0x6b,
-	0x1e, 0xcc, 0x07, 0x2e, 0xc2, 0x55, 0x4e, 0xbd, 0x2f, 0x59, 0x90, 0x40, 0x70, 0x03, 0xb7, 0xfc,
-	0x7e, 0x69, 0xb1, 0xda, 0x19, 0xf3, 0xf5, 0xd9, 0x3c, 0x00, 0x69, 0x4d, 0x57, 0x58, 0x9d, 0x1e,
-	0x5e, 0x33, 0x51, 0x9a, 0xc2, 0x66, 0x6c, 0xa5, 0xd6, 0x31, 0x5a, 0x2e, 0xc5, 0x54, 0x58, 0xb4,
-	0x31, 0x8a, 0xa9, 0x00, 0xe9, 0x93, 0xe2, 0xdf, 0x5f, 0x3d, 0x46, 0x91, 0xf5, 0x3d, 0x3b, 0xfa,
-	0x09, 0x00, 0x00, 0xff, 0xff, 0x0b, 0xed, 0xe5, 0xb5, 0xec, 0x01, 0x00, 0x00,
+	// 1228 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x84, 0x55, 0x49, 0x6f, 0x1c, 0x45,
+	0x14, 0x66, 0xa6, 0xed, 0xd8, 0xae, 0x49, 0x9c, 0x4a, 0x65, 0x1b, 0xcc, 0x12, 0x2b, 0xe2, 0x10,
+	0x21, 0xc5, 0x56, 0xcc, 0xcd, 0x48, 0x48, 0xe5, 0xae, 0x37, 0x33, 0x25, 0x77, 0x57, 0x75, 0xaa,
+	0xaa, 0xed, 0x4c, 0x2e, 0xa5, 0xb1, 0xdd, 0x19, 0x5b, 0x72, 0x3c, 0x56, 0x4f, 0x5b, 0xc0, 0x95,
+	0x5b, 0x38, 0xa0, 0x24, 0x24, 0xec, 0xbb, 0xc4, 0xaa, 0x84, 0xb0, 0x1d, 0x72, 0xe3, 0xc0, 0x81,
+	0x7d, 0xf9, 0x09, 0x88, 0xdf, 0xc0, 0x12, 0x16, 0x01, 0xaa, 0x9a, 0xc5, 0xe1, 0x80, 0x72, 0xeb,
+	0x7a, 0xf5, 0x96, 0xef, 0x7d, 0xdf, 0xab, 0x7e, 0x88, 0x64, 0x8f, 0x15, 0xd9, 0x56, 0x77, 0xa3,
+	0xb3, 0x35, 0x9b, 0xb7, 0x67, 0xb6, 0xf3, 0x4e, 0xd1, 0x21, 0xe5, 0xbc, 0x3d, 0x35, 0xdd, 0xee,
+	0x74, 0xda, 0x9b, 0xd9, 0xac, 0xb7, 0xac, 0xec, 0x9c, 0x9b, 0x5d, 0xcb, 0xba, 0xab, 0xf9, 0xc6,
+	0x76, 0xd1, 0xc9, 0x7b, 0x5e, 0xc7, 0x9f, 0x28, 0xa1, 0xd1, 0x2c, 0xcf, 0x3b, 0x39, 0x39, 0x84,
+	0x46, 0xb6, 0x5a, 0xe7, 0xb3, 0xea, 0xa5, 0x9b, 0xa7, 0xa6, 0x4b, 0x27, 0x26, 0x94, 0x3f, 0x91,
+	0x53, 0xa8, 0xb2, 0x5e, 0x14, 0xdb, 0xb6, 0x5b, 0xb4, 0x8a, 0x9d, 0x6e, 0xf5, 0xb2, 0xbf, 0x9c,
+	0x9c, 0x9b, 0x9c, 0xc9, 0xdb, 0x33, 0x8d, 0xa2, 0xd8, 0xd6, 0xde, 0xae, 0xd0, 0xfa, 0xf0, 0xdb,
+	0x25, 0x5a, 0xed, 0xac, 0x65, 0xd5, 0x2b, 0xde, 0x77, 0x54, 0xf9, 0x13, 0x99, 0x42, 0x63, 0xe7,
+	0xb3, 0x6e, 0xb7, 0xd5, 0xce, 0xaa, 0x57, 0xfb, 0x15, 0x06, 0x86, 0xe3, 0xf3, 0x68, 0x84, 0xee,
+	0x14, 0xeb, 0xce, 0x27, 0xdb, 0x6a, 0xad, 0x6c, 0x66, 0x6b, 0xd5, 0x0b, 0x4f, 0xcd, 0x4d, 0x97,
+	0x4e, 0x8c, 0xab, 0x81, 0x81, 0x1c, 0x41, 0xa3, 0x79, 0x67, 0x33, 0xeb, 0x56, 0x9f, 0xf4, 0x37,
+	0x13, 0xaa, 0x77, 0x7c, 0xf0, 0x42, 0x05, 0xa1, 0x5d, 0x20, 0xa4, 0x82, 0xc6, 0x52, 0xb1, 0x28,
+	0xe4, 0xb2, 0xc0, 0x77, 0x91, 0xbd, 0x68, 0x3c, 0x94, 0xc2, 0x70, 0x91, 0x02, 0x5e, 0x23, 0x47,
+	0xd1, 0x41, 0xbd, 0xcc, 0x4d, 0xd8, 0xe0, 0xa2, 0x6e, 0x13, 0x25, 0x8d, 0x0c, 0x65, 0xa4, 0x71,
+	0x46, 0x26, 0x11, 0x4a, 0x94, 0x0c, 0x41, 0x6b, 0x2e, 0xea, 0xf8, 0x1c, 0xd9, 0x8f, 0x2a, 0x40,
+	0x55, 0xd4, 0xb4, 0x0d, 0x2e, 0x8c, 0xc6, 0x6d, 0x32, 0x86, 0xca, 0x72, 0x11, 0x7f, 0x51, 0x22,
+	0x7b, 0xd1, 0x58, 0xa8, 0x80, 0x1a, 0x60, 0xf8, 0xcb, 0x12, 0xd9, 0x87, 0xc6, 0x69, 0x18, 0x42,
+	0xe2, 0x8e, 0x5f, 0x95, 0xc8, 0x71, 0x74, 0x9f, 0x90, 0xc2, 0xd2, 0xd4, 0x34, 0xa4, 0xe2, 0x86,
+	0x1a, 0xbe, 0x04, 0x96, 0x8b, 0x9a, 0x54, 0x31, 0x35, 0x5c, 0x0a, 0xfc, 0x75, 0x89, 0xec, 0x47,
+	0x48, 0x48, 0xeb, 0x40, 0x81, 0x30, 0xf8, 0x9b, 0x12, 0x21, 0x68, 0x9f, 0x02, 0x0d, 0x66, 0x68,
+	0xfb, 0xb6, 0x44, 0x0e, 0xa1, 0xfd, 0x09, 0x55, 0x86, 0xd3, 0x68, 0x68, 0xfd, 0xae, 0x44, 0x0e,
+	0xa0, 0xbd, 0x71, 0x1a, 0x19, 0x6e, 0xb5, 0xa1, 0x26, 0xd5, 0xf8, 0xfb, 0x12, 0x39, 0x8c, 0x30,
+	0x8d, 0x14, 0x50, 0xd6, 0xb4, 0x0a, 0x12, 0xa9, 0x1c, 0x90, 0x1f, 0x3c, 0x4a, 0x1e, 0xdb, 0x54,
+	0x03, 0xc3, 0x3f, 0x79, 0x27, 0x1f, 0x97, 0x44, 0x60, 0xc3, 0x86, 0xe4, 0x21, 0x68, 0x7c, 0xad,
+	0x4c, 0x8e, 0xa0, 0x03, 0xb1, 0x5c, 0x02, 0x66, 0x13, 0x50, 0x31, 0x15, 0x20, 0x4c, 0xd4, 0xc4,
+	0xd7, 0xcb, 0x04, 0xa1, 0xd1, 0x9a, 0x4c, 0x05, 0xc3, 0xef, 0x97, 0xc9, 0x24, 0x9a, 0xd0, 0x00,
+	0x56, 0x9a, 0x06, 0x28, 0x7c, 0xa3, 0xec, 0x20, 0x08, 0x69, 0x6c, 0x2c, 0x19, 0xaf, 0x71, 0x60,
+	0xf8, 0x03, 0xef, 0x92, 0x6a, 0x70, 0x74, 0x9e, 0x69, 0xe2, 0x0f, 0xbd, 0x4b, 0x8f, 0xe4, 0xbe,
+	0xe9, 0xa3, 0x32, 0x39, 0x8a, 0x88, 0x81, 0x38, 0x91, 0x8a, 0x2a, 0x87, 0x93, 0x71, 0x05, 0xa1,
+	0xc1, 0x1f, 0xfb, 0x8b, 0x61, 0xf1, 0xdd, 0x8b, 0x4f, 0xca, 0x04, 0xa3, 0xca, 0x02, 0x65, 0x56,
+	0xc1, 0xe9, 0x14, 0xb4, 0xc1, 0x17, 0x03, 0x97, 0x36, 0x15, 0x7d, 0x66, 0xcf, 0x02, 0xc3, 0x97,
+	0x02, 0xd7, 0x57, 0x42, 0x9b, 0x71, 0x2f, 0xf6, 0x74, 0xca, 0x15, 0x30, 0x7c, 0x39, 0x70, 0x80,
+	0x6a, 0x52, 0x2d, 0x70, 0xc6, 0x40, 0xe0, 0xa7, 0xfd, 0xd9, 0x61, 0xee, 0xf5, 0x74, 0x25, 0x70,
+	0x45, 0x63, 0x30, 0x0d, 0xc9, 0xac, 0x33, 0xd3, 0x28, 0x92, 0xcb, 0xc0, 0xf0, 0xd5, 0x80, 0x1c,
+	0x44, 0x93, 0xde, 0xe2, 0x15, 0xa5, 0x0b, 0x11, 0xe0, 0x67, 0x02, 0xa7, 0xa9, 0xef, 0xc3, 0xab,
+	0x0a, 0xc2, 0xf0, 0xd0, 0x4b, 0xb9, 0x5b, 0xf1, 0xd9, 0xc0, 0xc9, 0xd5, 0x47, 0x6a, 0x0d, 0x8f,
+	0x41, 0xa6, 0x06, 0x3f, 0x17, 0xb8, 0xe1, 0x08, 0xa5, 0xa8, 0x45, 0x3c, 0x34, 0xf8, 0xf9, 0x80,
+	0x4c, 0xa0, 0x91, 0xba, 0x14, 0x80, 0x5f, 0xf0, 0xfe, 0x11, 0x88, 0xba, 0x69, 0xec, 0x66, 0x79,
+	0x31, 0x20, 0x55, 0x74, 0x30, 0x51, 0x10, 0x4a, 0xc1, 0xb8, 0xaf, 0x50, 0xa3, 0x3c, 0x02, 0x86,
+	0x5f, 0x0a, 0x9c, 0x52, 0x09, 0x6d, 0x46, 0x92, 0x32, 0x6b, 0xa4, 0xb4, 0x11, 0x55, 0x75, 0xc0,
+	0x2f, 0xf7, 0x38, 0x51, 0xbc, 0x67, 0x93, 0xa2, 0x8e, 0x5f, 0x09, 0xc8, 0x3d, 0xe8, 0x48, 0x2a,
+	0x74, 0x9a, 0xf4, 0x66, 0xc1, 0xc6, 0xc0, 0x38, 0xb5, 0xa6, 0x99, 0x00, 0x7e, 0x35, 0x20, 0x53,
+	0xe8, 0xb0, 0xa2, 0xa2, 0x0e, 0xbe, 0x71, 0x4d, 0x0d, 0xd7, 0x35, 0xee, 0xfb, 0x7c, 0xcd, 0xb3,
+	0x02, 0x67, 0x12, 0x08, 0x0d, 0xbd, 0xbd, 0xf8, 0xeb, 0xbe, 0x08, 0xb7, 0xb1, 0xa5, 0xd6, 0x00,
+	0x4d, 0xa4, 0xc1, 0x6f, 0x78, 0xa4, 0x31, 0xd7, 0x3d, 0xb5, 0x60, 0x57, 0xa5, 0x37, 0x03, 0x72,
+	0x37, 0x3a, 0x94, 0x8a, 0xfe, 0x53, 0x72, 0x99, 0xad, 0x63, 0xcc, 0x34, 0xf1, 0x5b, 0x01, 0xa9,
+	0xa0, 0x3d, 0x91, 0x0c, 0x17, 0x81, 0xe1, 0xb7, 0x7d, 0x47, 0xbd, 0x0a, 0x96, 0x41, 0x02, 0x82,
+	0x81, 0x08, 0x9b, 0xf8, 0x1d, 0xaf, 0x95, 0xeb, 0xc6, 0x3f, 0x3e, 0xfc, 0xae, 0x97, 0x38, 0x4d,
+	0xea, 0x8a, 0x32, 0xd8, 0xa5, 0xea, 0x3d, 0xdf, 0xc8, 0x7f, 0xa8, 0x1a, 0xde, 0x5d, 0xf3, 0xa9,
+	0x5d, 0x8a, 0x98, 0x8a, 0xe6, 0x00, 0x99, 0xc6, 0xd7, 0x03, 0xf2, 0x00, 0x3a, 0x36, 0x10, 0xa9,
+	0x01, 0x94, 0x81, 0xb2, 0x35, 0x0e, 0x11, 0xd3, 0xb7, 0x51, 0x7a, 0xc3, 0xcb, 0x9d, 0x0a, 0xba,
+	0x44, 0x79, 0xe4, 0xe1, 0xd7, 0xa4, 0xb2, 0x11, 0xd4, 0x69, 0x64, 0x15, 0x50, 0x2d, 0x85, 0xc6,
+	0x9f, 0xf9, 0xea, 0x5c, 0x18, 0x50, 0x82, 0x46, 0x56, 0x83, 0x5a, 0x02, 0x65, 0x41, 0x29, 0xa9,
+	0xf0, 0xcf, 0x5e, 0x5a, 0x47, 0x2e, 0x8f, 0x93, 0x08, 0xdc, 0x64, 0x02, 0xc3, 0xbf, 0x04, 0x83,
+	0x71, 0xae, 0x53, 0x03, 0xcb, 0xb4, 0x89, 0x7f, 0xf5, 0x14, 0xba, 0x50, 0x1e, 0x82, 0xbd, 0xad,
+	0x1e, 0xfe, 0xcd, 0x67, 0xe8, 0xfb, 0x0d, 0x87, 0xe9, 0x56, 0x40, 0x8e, 0xa1, 0xa9, 0x86, 0x31,
+	0x89, 0x5d, 0x02, 0xa5, 0x5d, 0xc7, 0x5e, 0xc1, 0x81, 0xcc, 0xf8, 0xf7, 0x80, 0xdc, 0x8b, 0x8e,
+	0x2e, 0x51, 0xc5, 0xa9, 0x70, 0x23, 0xad, 0xa5, 0x15, 0x50, 0x97, 0x86, 0x53, 0x03, 0x1a, 0xff,
+	0xe1, 0x75, 0xe1, 0x42, 0xa7, 0xb5, 0x1a, 0x0f, 0xb9, 0x7b, 0x2f, 0xda, 0x48, 0x45, 0xeb, 0x80,
+	0xff, 0x0c, 0xdc, 0xff, 0x27, 0x92, 0x32, 0xb1, 0x0c, 0x8c, 0x97, 0x13, 0xff, 0x15, 0x0c, 0x9e,
+	0x39, 0x9c, 0x31, 0x4e, 0x1b, 0x86, 0xff, 0xf6, 0xf4, 0x09, 0x30, 0xcb, 0x52, 0x2d, 0xfe, 0xef,
+	0x4b, 0xf8, 0x27, 0x98, 0x0f, 0xd1, 0x1e, 0xbf, 0x4b, 0xba, 0xe4, 0xfe, 0x99, 0xde, 0xe6, 0x99,
+	0x19, 0x6c, 0x9e, 0x99, 0x38, 0x2b, 0xd6, 0x3b, 0x6b, 0x72, 0xbb, 0xd8, 0xe8, 0x6c, 0x75, 0xab,
+	0x17, 0x6f, 0x9e, 0x9a, 0x0e, 0x4e, 0x54, 0xe6, 0x26, 0xdc, 0x1e, 0xf1, 0x31, 0xaa, 0x1f, 0x3a,
+	0xff, 0x08, 0x1a, 0x69, 0xb9, 0x65, 0x70, 0xa7, 0x14, 0xb7, 0x3e, 0x75, 0x5b, 0xa4, 0x32, 0x37,
+	0xee, 0x52, 0xb8, 0xf5, 0xa1, 0x7c, 0xdc, 0x3c, 0x45, 0x95, 0x76, 0xab, 0xc8, 0x1e, 0x6d, 0x3d,
+	0x6e, 0x77, 0xf2, 0xcd, 0x3b, 0xa6, 0xf9, 0xf1, 0xf3, 0xde, 0x32, 0x42, 0xfd, 0xa0, 0x34, 0xdf,
+	0x5c, 0x98, 0x3d, 0x7b, 0xb2, 0xbd, 0x51, 0x6c, 0xb6, 0x56, 0x66, 0x56, 0x3b, 0xe7, 0x67, 0xf3,
+	0x9d, 0xd6, 0x56, 0xbb, 0xbd, 0x93, 0xef, 0xcc, 0xe6, 0xed, 0x93, 0xab, 0x9d, 0xad, 0x22, 0x6f,
+	0xad, 0x16, 0xb3, 0xc3, 0x8d, 0xfb, 0x70, 0xde, 0x5e, 0xd9, 0xe3, 0x93, 0x3f, 0xf4, 0x6f, 0x00,
+	0x00, 0x00, 0xff, 0xff, 0xeb, 0xf4, 0xf2, 0xd1, 0x88, 0x07, 0x00, 0x00,
 }
