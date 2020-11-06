@@ -5,9 +5,10 @@ package validation
 
 import (
 	fmt "fmt"
+	math "math"
+
 	proto "github.com/golang/protobuf/proto"
 	descriptor "github.com/golang/protobuf/protoc-gen-go/descriptor"
-	math "math"
 )
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -256,6 +257,15 @@ var E_Variant = &proto.ExtensionDesc{
 	Filename:      "extension/validation/validation.proto",
 }
 
+var E_Rules = &proto.ExtensionDesc{
+	ExtendedType:  (*descriptor.FieldOptions)(nil),
+	ExtensionType: (*string)(nil),
+	Field:         820007,
+	Name:          "validation.rules",
+	Tag:           "bytes,820007,opt,name=rules",
+	Filename:      "extension/validation/validation.proto",
+}
+
 func init() {
 	proto.RegisterEnum("validation.Variant", Variant_name, Variant_value)
 	proto.RegisterExtension(E_Required)
@@ -264,6 +274,7 @@ func init() {
 	proto.RegisterExtension(E_Nullable)
 	proto.RegisterExtension(E_Datatype)
 	proto.RegisterExtension(E_Variant)
+	proto.RegisterExtension(E_Rules)
 }
 
 func init() {
