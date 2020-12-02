@@ -266,6 +266,15 @@ var E_Rules = &proto.ExtensionDesc{
 	Filename:      "extension/validation/validation.proto",
 }
 
+var E_RulesMessage = &proto.ExtensionDesc{
+	ExtendedType:  (*descriptor.FieldOptions)(nil),
+	ExtensionType: (*string)(nil),
+	Field:         820008,
+	Name:          "validation.rules_message",
+	Tag:           "bytes,820007,opt,name=rules_message",
+	Filename:      "extension/validation/validation.proto",
+}
+
 func init() {
 	proto.RegisterEnum("validation.Variant", Variant_name, Variant_value)
 	proto.RegisterExtension(E_Required)
@@ -275,6 +284,7 @@ func init() {
 	proto.RegisterExtension(E_Datatype)
 	proto.RegisterExtension(E_Variant)
 	proto.RegisterExtension(E_Rules)
+	proto.RegisterExtension(E_RulesMessage)
 }
 
 func init() {
