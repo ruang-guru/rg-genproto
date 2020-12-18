@@ -5,9 +5,10 @@ package rg
 
 import (
 	fmt "fmt"
+	math "math"
+
 	proto "github.com/golang/protobuf/proto"
 	descriptor "github.com/golang/protobuf/protoc-gen-go/descriptor"
-	math "math"
 )
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -576,6 +577,54 @@ func (m *DefaultError) GetFromCommonError() []CommonError {
 	return nil
 }
 
+type Cache struct {
+	Key                  string   `protobuf:"bytes,860001,opt,name=key,proto3" json:"key,omitempty"`
+	Type                 string   `protobuf:"bytes,860002,opt,name=type,proto3" json:"type,omitempty"`
+	TTL                  int32    `protobuf:"varint,860003,opt,name=ttl,proto3" json:"ttl,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *Cache) Reset()         { *m = Cache{} }
+func (m *Cache) String() string { return proto.CompactTextString(m) }
+func (*Cache) ProtoMessage()    {}
+func (*Cache) Descriptor() ([]byte, []int) {
+	return fileDescriptor_c2f09094b3bb6ba0, []int{4}
+}
+
+func (m *Cache) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_Cache.Unmarshal(m, b)
+}
+func (m *Cache) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_Cache.Marshal(b, m, deterministic)
+}
+func (m *Cache) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_Cache.Merge(m, src)
+}
+func (m *Cache) XXX_Size() int {
+	return xxx_messageInfo_Cache.Size(m)
+}
+func (m *Cache) XXX_DiscardUnknown() {
+	xxx_messageInfo_Cache.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_Cache proto.InternalMessageInfo
+
+func (m *Cache) GetKey() string {
+	if m != nil {
+		return m.Key
+	}
+	return ""
+}
+
+func (m *Cache) GetType() string {
+	if m != nil {
+		return m.Type
+	}
+	return ""
+}
+
 var E_Errors = &proto.ExtensionDesc{
 	ExtendedType:  (*descriptor.MethodOptions)(nil),
 	ExtensionType: ([]*Error)(nil),
@@ -630,6 +679,15 @@ var E_DefaultErrors = &proto.ExtensionDesc{
 	Filename:      "rg/rg.proto",
 }
 
+var E_Cache = &proto.ExtensionDesc{
+	ExtendedType:  (*descriptor.MethodOptions)(nil),
+	ExtensionType: (*Cache)(nil),
+	Field:         814000,
+	Name:          "rg.cache",
+	Tag:           "bytes,814000,opt,name=cache",
+	Filename:      "rg/rg.proto",
+}
+
 func init() {
 	proto.RegisterEnum("rg.CommonError", CommonError_name, CommonError_value)
 	proto.RegisterEnum("rg.HttpStatus", HttpStatus_name, HttpStatus_value)
@@ -637,12 +695,14 @@ func init() {
 	proto.RegisterType((*Auth)(nil), "rg.Auth")
 	proto.RegisterType((*OAuth)(nil), "rg.OAuth")
 	proto.RegisterType((*DefaultError)(nil), "rg.DefaultError")
+	proto.RegisterType((*Cache)(nil), "rg.Cache")
 	proto.RegisterExtension(E_Errors)
 	proto.RegisterExtension(E_Auth)
 	proto.RegisterExtension(E_GatewayUrl)
 	proto.RegisterExtension(E_Oauth)
 	proto.RegisterExtension(E_Unstable)
 	proto.RegisterExtension(E_DefaultErrors)
+	proto.RegisterExtension(E_Cache)
 }
 
 func init() { proto.RegisterFile("rg/rg.proto", fileDescriptor_c2f09094b3bb6ba0) }
